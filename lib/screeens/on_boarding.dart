@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:get/get.dart';
@@ -14,99 +15,48 @@ class OnBoarding extends StatelessWidget {
           children: [
             buildPage(
               imagePath: "assets/images/onboarding1.jpg",
-              title: "trouver le meilleur ",
+              title: "Trouvez les meilleurs",
               subTitle: "cours avec nous",
               description: [
-                "L'apprentissage peut être plus facile",
-                "Vous pouvez profiter d'apprendre avec nous",
-                "Alors… Que veux-tu vraiment apprendre ?",
+                "L’apprentissage peut être simple.",
+                "Découvrez des cours adaptés à votre rythme.",
+                "Alors… Qu’aimeriez-vous apprendre aujourd’hui ?",
               ],
               currentPage: 0,
               pageCount: 3,
-              onTap: () {
-                // Navigate to login screen
-                Get.to(() => LoginScreen());
-              },
-              container: Container(
-                height: 50, // Adjust height as needed
-                width: 150, // Adjust width for desired size
-                decoration: BoxDecoration(
-                  color: Colors.amber, // Button color
-                  borderRadius: BorderRadius.circular(30), // Make it rounded
-                ),
-                margin: EdgeInsets.symmetric(horizontal: 50),
-                child: Center(
-                  child: Text(
-                    'Continuer',
-                    style: TextStyle(color: Colors.black), // Text color
-                  ),
-                ),
-              ),
+              onTap: () => Get.to(() => LoginScreen()),
+              buttonColor: Colors.blue,
             ),
+
             buildPage(
               imagePath: "assets/images/onboarding2.jpg",
-              title: "trouver le meilleur ",
-              subTitle: "cours avec nous",
+              title: "Progressez à votre",
+              subTitle: "propre rythme",
               description: [
-                "L'apprentissage peut être plus facile",
-                "Vous pouvez profiter d'apprendre avec nous",
-                "Alors… Que veux-tu vraiment apprendre ?",
+                "Apprenez quand vous voulez.",
+                "Des cours clairs, riches et interactifs.",
+                "Votre réussite commence maintenant.",
               ],
               currentPage: 1,
               pageCount: 3,
-              onTap: () {
-                // Navigate to login screen
-                Get.to(() => LoginScreen());
-              },
-              container: Container(
-                height: 50, // Adjust height as needed
-                width: 150, // Adjust width for desired size
-                decoration: BoxDecoration(
-                  color: Colors.blue, // Button color
-                  borderRadius: BorderRadius.circular(30), // Make it rounded
-                ),
-                margin: EdgeInsets.symmetric(horizontal: 50),
-                child: Center(
-                  child: Text(
-                    'Continuer',
-                    style: TextStyle(color: Colors.black), // Text color
-                  ),
-                ),
-              ),
+              onTap: () => Get.to(() => LoginScreen()),
+              buttonColor: Colors.blue,
             ),
+
             buildPage(
               imagePath: "assets/images/onboarding3.png",
-              title: "trouver le meilleur ",
-              subTitle: "cours avec nous",
+              title: "Rejoignez notre",
+              subTitle: "communauté d’apprenants",
               description: [
-                "L'apprentissage peut être plus facile",
-                "Vous pouvez profiter d'apprendre avec nous",
-                "Alors… Que veux-tu vraiment apprendre ?",
+                "Des centaines d’étudiants motivés.",
+                "Des parcours complets pour tous les niveaux.",
+                "Êtes-vous prêt à commencer ?",
               ],
               currentPage: 2,
               pageCount: 3,
-              onTap: () {
-                // Add onTap functionality for the third page
-                print('Tapped on the third page');
-              },
-              container: Container(
-                height: 50, // Adjust height as needed
-                width: 150, // Adjust width for desired size
-                decoration: BoxDecoration(
-                  color: Colors.teal, // Button color
-                  borderRadius: BorderRadius.circular(30), // Make it rounded
-                ),
-                margin: EdgeInsets.symmetric(horizontal: 50),
-                child: Center(
-                  child: Text(
-                    'Continuer',
-                    style: TextStyle(color: Colors.black), // Text color
-                  ),
-                ),
-              ),
+              onTap: () => Get.to(() => LoginScreen()),
+              buttonColor: Colors.blue,
             ),
-            LoginScreen(),
-            // Add more pages here if needed
           ],
         ),
       ),
@@ -121,69 +71,172 @@ class OnBoarding extends StatelessWidget {
     required int currentPage,
     required int pageCount,
     required VoidCallback onTap,
-    Widget? container,
+    required Color buttonColor,
   }) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: GestureDetector(
-          onTap: onTap,
+    return Stack(
+      children: [
+        // Background gradient
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.indigo.shade600,
+                Colors.blue.shade400,
+                Colors.white,
+              ],
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
+              const SizedBox(height: 20),
+
+              // IMAGE
               Expanded(
-                child: Image.asset(imagePath),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    imagePath,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: '$title',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25.0,
-                            color: Colors.black,
+
+              const SizedBox(height: 20),
+
+              // TEXT CONTAINER GLASSMORPHISM
+              ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1.2,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '$title ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 26,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              TextSpan(
+                                text: subTitle,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 26,
+                                  color: Colors.yellowAccent,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        TextSpan(
-                          text: ' $subTitle',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25.0,
-                            color: Colors.blue,
-                          ),
+
+                        const SizedBox(height: 20),
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: description
+                              .map(
+                                (line) => Padding(
+                              padding: const EdgeInsets.only(bottom: 6),
+                              child: Text(
+                                line,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white.withOpacity(0.9),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                              .toList(),
                         ),
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 60.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: description.map((text) => Text(text)).toList(),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // BUTTON
+              GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  height: 52,
+                  width: 180,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        buttonColor.withOpacity(0.9),
+                        buttonColor.withOpacity(0.7),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: buttonColor.withOpacity(0.4),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Continuer",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                ],
+                ),
               ),
-              container!,
+
+              const SizedBox(height: 20),
+
+              // DOTS INDICATOR
               DotsIndicator(
                 dotsCount: pageCount,
                 position: currentPage,
                 decorator: DotsDecorator(
-                  size: const Size.square(9.0),
-                  activeSize: const Size(18.0, 9.0),
-                  activeColor: Colors.blue,
+                  size: const Size(8, 8),
+                  activeSize: const Size(22, 8),
+                  activeColor: Colors.white,
+                  color: Colors.white.withOpacity(0.4),
                   activeShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
               ),
+
+              const SizedBox(height: 40),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 }

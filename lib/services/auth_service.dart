@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:espritacademy/models/auth_models.dart';
 import 'package:espritacademy/modals/user_model.dart';
 import 'package:dio/dio.dart';
+import 'package:espritacademy/models/forgot_password_model.dart';
+import 'package:espritacademy/models/reset_password_model.dart';
 import 'package:flutter/foundation.dart'; // for kIsWeb
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart'; // for XFile
@@ -10,8 +12,8 @@ class AuthService {
   final Dio _dio = Dio();
   // Using localhost for Web, 10.0.2.2 for Android Emulator
   // Note: For Web to work with localhost, the backend must support CORS.
-  final String _baseUrl = kIsWeb 
-      ? 'http://localhost:8080/api/v1/auth' 
+  final String _baseUrl = kIsWeb
+      ? 'http://localhost:8080/api/v1/auth'
       : 'http://localhost:8080/api/v1/auth';
   final _storage = const FlutterSecureStorage();
 
@@ -139,5 +141,58 @@ class AuthService {
 
   Future<String?> getToken() async {
     return await _storage.read(key: 'jwt_token');
+  }
+
+  Future<void> forgotPassword(String email) async {
+    try {
+      final request = ForgotPasswordRequest(email: email);
+      String requestJson = jsonEncode(request.toJson());
+
+      FormData formData = FormData.fromMap({
+        'request': requestJson,
+      });
+
+      final response = await _dio.post(
+        '$_baseUrl/forgotpassword',
+        data: formData,
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception("Password reset failed");
+      }
+
+    } on DioException catch (e) {
+      throw Exception('Forgot password error: ${e.response?.data ?? e.message}');
+    }
+  }
+
+
+  Future<void> resetPassword({
+    required String token,
+    required String newPassword,
+  }) async {
+    try {
+      final req = ResetPasswordRequest(token: token, password: newPassword);
+      String requestJson = jsonEncode(req.toJson());
+
+      FormData formData = FormData.fromMap({
+        'request': requestJson,
+      });
+
+      final response = await _dio.post(
+        '$_baseUrl/resetpassword', // réutilise _baseUrl configuré
+        data: formData,              // <--- FormData, pas JSON brut
+        options: Options(
+          // Laisse Dio définir multipart/form-data automatiquement
+          validateStatus: (s) => s != null && s < 500, // pour voir le body en cas de 4xx
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Reset failed [${response.statusCode}]: ${response.data}');
+      }
+    } on DioException catch (e) {
+      throw Exception('Reset error: ${e.response?.data ?? e.message}');
+    }
   }
 }
