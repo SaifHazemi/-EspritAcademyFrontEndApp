@@ -1,3 +1,4 @@
+import 'package:espritacademy/screens/forum/forum_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -77,7 +78,7 @@ class ProfileMenuController extends GetxController {
         title: "Forums",
         icon: Icons.forum,
         color: Colors.red,
-        //onTap: () => Get.to(() => ForumListScreen()),
+        onTap: () => Get.to(() => ForumListScreen()),
       ),
       DashboardItem(
         title: "Réclamation",
